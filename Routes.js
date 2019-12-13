@@ -6,11 +6,13 @@ import Intro from "./Components/Intro.js";
 import ProfilePhoto from "./Components/ProfilePhoto.js";
 import Moredetails from "./Components/MoreDetails.js";
 import LinkedIn from "./Components/LinkedIn.js";
+import Login from "./Components/Login.js";
 
 const Routes = () => (
   <Router>
     <Scene key="root">
       <Scene key="home" component={Intro} initial={true} />
+      <Scene key="login" component={Login} />
       <Scene key="signup" component={SignUp} />
       <Scene key="linkedIn" component={LinkedIn} />
       <Scene key="pDetails" component={PDetails} />

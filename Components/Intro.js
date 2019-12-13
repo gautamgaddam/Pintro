@@ -5,8 +5,8 @@ import Swiper from "react-native-web-swiper";
 import { Button } from "react-native-elements";
 import ActionHeader from "./ActionHeader";
 
-const width = '80%';
-const height = '40%';
+const width = "80%";
+const height = "40%";
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
     header: null
@@ -16,6 +16,9 @@ export default class HomeScreen extends React.Component {
     Actions.signup();
   };
 
+  goToSignIn = () => {
+    Actions.login();
+  };
 
   render() {
     return (
@@ -29,21 +32,24 @@ export default class HomeScreen extends React.Component {
               prevPos: false,
               nextPos: false
             }}
-           >
+          >
             <View
               style={{
                 flex: 1,
                 alignItems: "center",
-                flexDirection:'column',
+                flexDirection: "column",
                 justifyContent: "center",
                 backgroundColor: "#41225e"
               }}
             >
               <View style={styles.boxInner}></View>
 
-
-              <View style={styles.boxTextInner}><Text style={styles.boxTextInner1}>Video Resume</Text>
-              <Text style={styles.boxTextInner2}>lkslkdjlksjdlkjsdlkdjlkjdslkdsjlksdjlkdsjlkdsjlkjsk</Text></View>
+              <View style={styles.boxTextInner}>
+                <Text style={styles.boxTextInner1}>Video Resume</Text>
+                <Text style={styles.boxTextInner2}>
+                  lkslkdjlksjdlkjsdlkdjlkjdslkdsjlksdjlkdsjlkdsjlkjsk
+                </Text>
+              </View>
             </View>
             <View
               style={{
@@ -53,11 +59,9 @@ export default class HomeScreen extends React.Component {
                 backgroundColor: "#41225e"
               }}
             >
-            <View style={styles.boxInner}></View>
-
+              <View style={styles.boxInner}></View>
 
               <Text style={styles.boxTextInner}>Slide 2</Text>
-            
             </View>
             <View
               style={{
@@ -67,8 +71,7 @@ export default class HomeScreen extends React.Component {
                 backgroundColor: "#41225e"
               }}
             >
-            <View style={styles.boxInner}></View>
-
+              <View style={styles.boxInner}></View>
 
               <Text style={styles.boxTextInner}>Slide 3</Text>
             </View>
@@ -84,6 +87,7 @@ export default class HomeScreen extends React.Component {
               buttonStyle={[styles.btn, styles.supContainer]}
               titleStyle={{ color: "#000000" }}
               title="Sign In"
+              onPress={this.goToSignIn}
             />
           </View>
         </View>
@@ -110,29 +114,26 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     flexDirection: "row"
   },
-  boxInner:{
+  boxInner: {
     width,
-    borderColor:'#ffffff',
-    backgroundColor:'#7954A2',
+    borderColor: "#ffffff",
+    backgroundColor: "#7954A2",
     flex: 2,
     marginTop: 80,
-    borderRadius:10,
-    
+    borderRadius: 10
   },
-  boxTextInner:{
+  boxTextInner: {
     flex: 1,
-    color:'#ffffff',
-    marginTop:30
-
+    color: "#ffffff",
+    marginTop: 30
   },
-  boxTextInner1:{
-   color:'#9E6E2E',
-   fontSize: 20,
-   fontWeight:'bold',
-   textAlign:'center'
+  boxTextInner1: {
+    color: "#9E6E2E",
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: "center"
   },
-  boxTextInner2:{
-    color:'#ffffff'
+  boxTextInner2: {
+    color: "#ffffff"
   }
-
 });
