@@ -18,11 +18,16 @@ export default class Home extends Component {
     Actions.pDetails();
   };
 
+  goToLinkedIn = () => {
+    Actions.linkedIn();
+  };
+
   render() {
     return (
       <View>
         <Button
           buttonStyle={[styles.btnContainer, styles.linContainer]}
+          onPress={this.goToLinkedIn}
           icon={
             <Icon
               name="linkedin-square"

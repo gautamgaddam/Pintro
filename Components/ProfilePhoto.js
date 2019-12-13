@@ -1,65 +1,57 @@
-import React, { Component } from "react";
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
-import Svg, { Ellipse } from "react-native-svg";
+import * as React from "react";
+import {
+  Button,
+  Image,
+  Text,
+  View,
+  TouchableOpacity,
+  StyleSheet
+} from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import Constants from "expo-constants";
+import * as Permissions from "expo-permissions";
+import * as FileSystem from "expo-file-system";
+import Svg, { Ellipse } from "react-native-svg";
 import EntypoIcon from "react-native-vector-icons/Entypo";
 import FeatherIcon from "react-native-vector-icons/Feather";
+import { Actions } from "react-native-router-flux";
 
-export default class ProfilePhoto extends Component {
-  pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      base64: true
-    });
-    if (!result.cancelled) {
-      this.setState({
-        imageString: result.base64,
-      });
-    }
-  };
-
-  saveData = async () => {
-    console.log(JSON.stringify(this.state));
-    fetch(
-      "http://ec2-52-15-192-138.us-east-2.compute.amazonaws.com:6222/upload-img",
-      {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(this.state)
-      }
-    )
-      .then(response => response.json())
-      .then(responseJson => {
-        console.log(responseJson);
-      })
-      .catch(error => {
-        console.error(error);
-      });
+export default class ImagePickerExample extends React.Component {
+  state = {
+    image: null
   };
 
   render() {
+    let { image } = this.state;
     return (
       <View style={styles.container}>
         <View style={styles.skipColumn}>
-          <Text style={styles.skip}>Skip</Text>
+          <TouchableOpacity onPress={this.skipImage}>
+            <Text style={styles.skip}>Skip</Text>
+          </TouchableOpacity>
           <TouchableOpacity
             style={styles.ellipseStack}
-            onPress={this.pickImage}
+            onPress={this._pickImage}
           >
-            <Svg viewBox="0 0 100.00 100.00" style={styles.ellipse}>
-              <Ellipse
-                strokeWidth={1}
-                fill="rgba(13,33,121,1)"
-                stroke="rgba(230, 230, 230,1)"
-                cx={50}
-                cy={50}
-                rx={50}
-                ry={50}
-              ></Ellipse>
-            </Svg>
+            {image !== null ? (
+              <Image
+                source={{ uri: image }}
+                style={{ width: 200, height: 200 }}
+              />
+            ) : (
+              <Svg viewBox="0 0 100.00 100.00" style={styles.ellipse}>
+                <Ellipse
+                  strokeWidth={1}
+                  fill="rgba(13,33,121,1)"
+                  stroke="rgba(230, 230, 230,1)"
+                  cx={50}
+                  cy={50}
+                  rx={50}
+                  ry={50}
+                ></Ellipse>
+              </Svg>
+            )}
+
             <EntypoIcon
               name="controller-record"
               style={styles.icon4}
@@ -79,8 +71,67 @@ export default class ProfilePhoto extends Component {
       </View>
     );
   }
-}
 
+  componentDidMount() {
+    this.getPermissionAsync();
+  }
+
+  getPermissionAsync = async () => {
+    if (Constants.platform.ios) {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (status !== "granted") {
+        alert("Sorry, we need camera roll permissions to make this work!");
+      }
+    }
+  };
+  skipImage = () => {
+    Actions.moreDetails();
+  };
+  _pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1
+    });
+
+    if (!result.cancelled) {
+      const base64 = await FileSystem.readAsStringAsync(result.uri, {
+        encoding: "base64"
+      });
+      imageString = "'data:image/jpeg;base64," + base64 + "'";
+      this.setState({
+        image: result.uri,
+        type: result.uri.substring(result.uri.lastIndexOf(".")),
+        imageString: base64,
+        email: global.email
+      });
+    }
+  };
+
+  saveData = async () => {
+    fetch(
+      "http://ec2-52-15-192-138.us-east-2.compute.amazonaws.com:6222/upload-img",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(this.state)
+      }
+    )
+      .then(response => response.json())
+      .then(responseJson => {
+        if (responseJson.status === 200) {
+          Actions.moreDetails();
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1

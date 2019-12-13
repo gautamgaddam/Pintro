@@ -9,15 +9,12 @@ import {
 import ActionHeader from "./ActionHeader";
 import { Actions } from "react-native-router-flux";
 
-export default class PDetails extends Component {
+export default class LinkedIn extends Component {
   constructor(props) {
     super(props);
     this.state = {
       email: "",
-      first_name: "",
-      last_name: "",
-      password: "",
-      re_password: ""
+      password: ""
     };
   }
 
@@ -32,7 +29,7 @@ export default class PDetails extends Component {
 
   saveData = async () => {
     fetch(
-      "http://ec2-52-15-192-138.us-east-2.compute.amazonaws.com:6222/add-user",
+      "http://ec2-52-15-192-138.us-east-2.compute.amazonaws.com:6222/linked-in-login",
       {
         method: "POST",
         headers: {
@@ -44,14 +41,8 @@ export default class PDetails extends Component {
     )
       .then(response => response.json())
       .then(responseJson => {
-        if (responseJson.length > 0 && responseJson[0] != undefined) {
-          global.email = this.state.email;
-          if (responseJson[0].add_user) {
-            Actions.profilePhoto();
-          } else {
-            Actions.profilePhoto();
-          }
-        }
+        console.log(responseJson);
+        Actions.profilePhoto();
       })
       .catch(error => {
         console.error(error);
@@ -71,26 +62,6 @@ export default class PDetails extends Component {
           keyboardType="email-address"
           onSubmitEditing={() => this.password.focus()}
         />
-        <TextInput
-          style={styles.inputBox}
-          onChangeText={first_name => this.setState({ first_name })}
-          underlineColorAndroid="rgba(0,0,0,0)"
-          placeholder="First Name"
-          placeholderTextColor="#002f6c"
-          selectionColor="#fff"
-          keyboardType="default"
-          onSubmitEditing={() => this.password.focus()}
-        />
-        <TextInput
-          style={styles.inputBox}
-          onChangeText={last_name => this.setState({ last_name })}
-          underlineColorAndroid="rgba(0,0,0,0)"
-          placeholder="Last Name"
-          placeholderTextColor="#002f6c"
-          selectionColor="#fff"
-          keyboardType="default"
-          onSubmitEditing={() => this.password.focus()}
-        />
 
         <TextInput
           style={styles.inputBox}
@@ -100,21 +71,9 @@ export default class PDetails extends Component {
           secureTextEntry={true}
           placeholderTextColor="#002f6c"
         />
-
-        <TextInput
-          style={styles.inputBox}
-          onChangeText={re_password => this.setState({ re_password })}
-          underlineColorAndroid="rgba(0,0,0,0)"
-          placeholder="Re-type Password"
-          secureTextEntry={true}
-          placeholderTextColor="#002f6c"
-        />
-        <Text style={styles.terms}>
-          By clicking on Sign Up, you agree to out User Terms & Privacy Policy
-        </Text>
         <TouchableOpacity style={styles.submitButton}>
           <Text style={styles.buttonText} onPress={this.saveData}>
-            Sign Up
+            Sign In
           </Text>
         </TouchableOpacity>
       </View>
