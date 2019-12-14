@@ -7,7 +7,7 @@ import ProfilePhoto from "./Components/ProfilePhoto.js";
 import Moredetails from "./Components/MoreDetails.js";
 import LinkedIn from "./Components/LinkedIn.js";
 import Login from "./Components/Login.js";
-import SetupProfile from "./Components/setupProfile.js";
+import SetupProfile from "./Components/SetupProfile.js";
 
 const Routes = () => (
   <Router>
