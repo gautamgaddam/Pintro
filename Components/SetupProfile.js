@@ -18,7 +18,9 @@ export default class SetupProfile extends Component {
     headerTintColor: "#606070"
   };
 
-  goToProceed() {}
+  goToProceed() {
+    Actions.profilePages();
+  }
 
   goToSkip() {}
 

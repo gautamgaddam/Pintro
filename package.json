@@ -17,6 +17,7 @@
     "react-native-datepicker": "^1.7.2",
     "react-native-elements": "^1.2.7",
     "react-native-form-builder": "^1.0.16",
+    "react-native-progress-steps": "^1.2.8",
     "react-native-router-flux": "^4.0.6",
     "react-native-simple-toast": "^1.0.0",
     "react-native-svg": "9.13.5",
