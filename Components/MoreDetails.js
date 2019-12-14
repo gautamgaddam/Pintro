@@ -56,13 +56,8 @@ export default class Moredetails extends Component {
     )
       .then(response => response.json())
       .then(responseJson => {
-        console.log(responseJson);
-        if (responseJson.length > 0 && responseJson[0] != undefined) {
-          if (responseJson[0].status === 200) {
-            Actions.profilePhoto();
-          } else {
-            Actions.profilePhoto();
-          }
+        if (responseJson.status === 200) {
+          Actions.seupProfile();
         }
       })
       .catch(error => {

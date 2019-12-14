@@ -7,6 +7,7 @@ import ProfilePhoto from "./Components/ProfilePhoto.js";
 import Moredetails from "./Components/MoreDetails.js";
 import LinkedIn from "./Components/LinkedIn.js";
 import Login from "./Components/Login.js";
+import SetupProfile from "./Components/setupProfile.js";
 
 const Routes = () => (
   <Router>
@@ -18,6 +19,7 @@ const Routes = () => (
       <Scene key="pDetails" component={PDetails} />
       <Scene key="profilePhoto" component={ProfilePhoto} />
       <Scene key="moreDetails" component={Moredetails} />
+      <Scene key="setupProfile" component={SetupProfile} />
     </Scene>
   </Router>
 );

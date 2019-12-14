@@ -28,26 +28,34 @@ export default class Login extends Component {
   };
 
   saveData = async () => {
-    Actions.profilePhoto();
-    // fetch(
-    //   "http://ec2-52-15-192-138.us-east-2.compute.amazonaws.com:6222/login",
-    //   {
-    //     method: "POST",
-    //     headers: {
-    //       Accept: "application/json",
-    //       "Content-Type": "application/json"
-    //     },
-    //     body: JSON.stringify(this.state)
-    //   }
-    // )
-    //   .then(response => response.json())
-    //   .then(responseJson => {
-    //     console.log(responseJson);
-    //     Actions.profilePhoto();
-    //   })
-    //   .catch(error => {
-    //     console.error(error);
-    //   });
+    fetch(
+      "http://ec2-52-15-192-138.us-east-2.compute.amazonaws.com:6222/login",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(this.state)
+      }
+    )
+      .then(response => response.json())
+      .then(responseJson => {
+        if (responseJson.length > 0 && responseJson[0] != undefined) {
+          global.user = responseJson[0];
+          global.email = global.user.email;
+          if (global.user.profile_url === null) {
+            Actions.profilePhoto();
+          } else if (global.user.gender === null || global.user.dob === null) {
+            Actions.moreDetails();
+          } else {
+            Actions.setupProfile();
+          }
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
   };
 
   render() {
