@@ -1,21 +1,23 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Picker } from "react-native";
+import { StyleSheet, Text, View, Picker, TextInput } from "react-native";
 import ActionHeader from "./ActionHeader";
 import { Button } from "react-native-elements";
 import { Actions } from "react-native-router-flux";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
+import DatePicker from "react-native-datepicker";
+import moment from "moment";
 
-const buttonTextStyle = {
-  color: "#393939"
-};
 export default class ProfilePages extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      industry: "",
-      category: "",
-      categories: []
+      industry: "Business services",
+      category: "cat1",
+      textInput: [],
+      workExperience: []
     };
+    this.categories = [];
+    this.textInput = [];
     this.industries = [
       {
         label: "Business services",
@@ -56,6 +58,88 @@ export default class ProfilePages extends Component {
     ];
   }
 
+  defaultScrollViewProps = {
+    keyboardShouldPersistTaps: "handled",
+    contentContainerStyle: {
+      flex: 1,
+      justifyContent: "center"
+    }
+  };
+
+  componentDidMount() {
+    this.getCategories(0, this.state.industry);
+  }
+
+  updateWExpe(key, value, index) {
+    var wExperience = this.state.workExperience;
+    wExperience[index][key] = value;
+    this.setState({ workExperience: wExperience });
+  }
+
+  addTextInput = key => {
+    let workExperience = this.state.workExperience;
+    workExperience.push({
+      companyName: "",
+      position: "",
+      from: moment().format("YYYY-MM-DD"),
+      to: moment().format("YYYY-MM-DD"),
+      isCurrent: false
+    });
+    this.textInput.push(
+      <View key={key}>
+        <TextInput
+          style={styles.inputBox}
+          onChangeText={companyName =>
+            this.updateWExpe("companyName", companyName, key)
+          }
+          underlineColorAndroid="rgba(0,0,0,0)"
+          placeholder="Company Name"
+          placeholderTextColor="#002f6c"
+          selectionColor="#fff"
+        />
+        <TextInput
+          style={styles.inputBox}
+          onChangeText={position => this.updateWExpe("position", position, key)}
+          underlineColorAndroid="rgba(0,0,0,0)"
+          placeholder="Position"
+          placeholderTextColor="#002f6c"
+          selectionColor="#fff"
+        />
+        <DatePicker
+          mode="date"
+          date={this.state.workExperience[key].from}
+          showIcon={false}
+          placeholder="Start Date"
+          format="YYYY-MM-DD"
+          customStyles={{
+            dateInput: {
+              marginLeft: 36
+            }
+          }}
+          onDateChange={sDate => {
+            this.updateWExpe("from", sDate, key);
+          }}
+        />
+        <DatePicker
+          mode="date"
+          date={this.state.workExperience[key].to}
+          showIcon={false}
+          placeholder="End Date"
+          format="YYYY-MM-DD"
+          customStyles={{
+            dateInput: {
+              marginLeft: 36
+            }
+          }}
+          onDateChange={eDate => {
+            this.updateWExpe("to", eDate, key);
+          }}
+        />
+      </View>
+    );
+    this.setState({ workExperience: workExperience });
+  };
+
   static navigationOptions = {
     headerLeft: <ActionHeader />,
     headerStyle: {
@@ -66,8 +150,8 @@ export default class ProfilePages extends Component {
   };
 
   getCategories(index, industry) {
+    this.categories = this.industries[index].categories;
     this.setState({
-      categories: this.industries[0].categories,
       industry: industry
     });
   }
@@ -78,16 +162,35 @@ export default class ProfilePages extends Component {
     });
   }
 
+  submitProfile() {
+    console.log(this.state);
+  }
+
   goToProceed() {}
 
   goToSkip() {}
 
   render() {
+    const progressStepsStyle = {
+      activeStepIconBorderColor: "#686868",
+      activeLabelColor: "#686868",
+      activeStepNumColor: "white",
+      activeStepIconColor: "#686868",
+      completedStepIconColor: "#686868",
+      completedProgressBarColor: "#686868",
+      completedCheckColor: "#4bb543"
+    };
+
+    const buttonTextStyle = {
+      color: "#686868",
+      fontWeight: "bold"
+    };
     return (
       <View style={{ flex: 1 }}>
-        <ProgressSteps>
+        <ProgressSteps {...progressStepsStyle}>
           <ProgressStep
             label="First Step"
+            scrollViewProps={this.defaultScrollViewProps}
             nextBtnTextStyle={buttonTextStyle}
             previousBtnTextStyle={buttonTextStyle}
           >
@@ -116,7 +219,7 @@ export default class ProfilePages extends Component {
                   this.setCategories(itemIndex, itemValue);
                 }}
               >
-                {this.state.categories.map((category, index) => {
+                {this.categories.map((category, index) => {
                   return (
                     <Picker.Item
                       key={index}
@@ -130,11 +233,19 @@ export default class ProfilePages extends Component {
           </ProgressStep>
           <ProgressStep
             label="Second Step"
+            scrollViewProps={this.defaultScrollViewProps}
             nextBtnTextStyle={buttonTextStyle}
             previousBtnTextStyle={buttonTextStyle}
+            onSubmit={this.submitProfile.bind(this)}
           >
             <View style={{ alignItems: "center" }}>
-              <Text>This is the content within step 2!</Text>
+              <Button
+                title="+ Add Work Experience"
+                onPress={() => this.addTextInput(this.textInput.length)}
+              />
+              {this.textInput.map((value, index) => {
+                return value;
+              })}
             </View>
           </ProgressStep>
         </ProgressSteps>
@@ -151,5 +262,14 @@ const styles = StyleSheet.create({
   formContainer: {
     height: 50,
     width: 90 + "%"
+  },
+  inputBox: {
+    backgroundColor: "#eeeeee",
+    fontSize: 16,
+    color: "#002f6c",
+    marginVertical: 10,
+    paddingHorizontal: 16,
+    width: 100 + "%",
+    height: 50
   }
 });

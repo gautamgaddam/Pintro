@@ -20,7 +20,7 @@
     "react-native-progress-steps": "^1.2.8",
     "react-native-router-flux": "^4.0.6",
     "react-native-simple-toast": "^1.0.0",
-    "react-native-svg": "9.13.5",
+    "react-native-svg": "9.13.3",
     "react-native-vector-icons": "^6.6.0",
     "react-native-web": "^0.11.7",
     "react-native-web-swiper": "^2.1.0"
