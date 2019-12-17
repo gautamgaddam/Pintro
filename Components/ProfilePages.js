@@ -6,6 +6,7 @@ import { Actions } from "react-native-router-flux";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 import DatePicker from "react-native-datepicker";
 import moment from "moment";
+import RadioButton from "./RadioButton";
 
 export default class ProfilePages extends Component {
   constructor(props) {
@@ -13,7 +14,6 @@ export default class ProfilePages extends Component {
     this.state = {
       industry: "Business services",
       category: "cat1",
-      textInput: [],
       workExperience: []
     };
     this.categories = [];
@@ -56,6 +56,43 @@ export default class ProfilePages extends Component {
         categories: ["cat1", "cat2", "cat3"]
       }
     ];
+    this.radioLabels = [
+      {
+        label: "Less than 1 year"
+      },
+      {
+        label: "1-3 Years"
+      },
+      {
+        label: "3-5 Years"
+      },
+      {
+        label: "More than 5 years"
+      }
+    ];
+
+    this.salaryLabels = [
+      {
+        label: "Flexible"
+      },
+      {
+        label: "$11-$15/Hr"
+      },
+      {
+        label: "$15-$20/Hr"
+      },
+      {
+        label: "More than $20/Hr"
+      }
+    ];
+    this.relocate = [
+      {
+        label: "Yes"
+      },
+      {
+        label: "No"
+      }
+    ];
   }
 
   defaultScrollViewProps = {
@@ -81,8 +118,8 @@ export default class ProfilePages extends Component {
     workExperience.push({
       companyName: "",
       position: "",
-      from: moment().format("YYYY-MM-DD"),
-      to: moment().format("YYYY-MM-DD"),
+      from: "",
+      to: "",
       isCurrent: false
     });
     this.textInput.push(
@@ -105,36 +142,38 @@ export default class ProfilePages extends Component {
           placeholderTextColor="#002f6c"
           selectionColor="#fff"
         />
-        <DatePicker
-          mode="date"
-          date={this.state.workExperience[key].from}
-          showIcon={false}
-          placeholder="Start Date"
-          format="YYYY-MM-DD"
-          customStyles={{
-            dateInput: {
-              marginLeft: 36
-            }
-          }}
-          onDateChange={sDate => {
-            this.updateWExpe("from", sDate, key);
-          }}
-        />
-        <DatePicker
-          mode="date"
-          date={this.state.workExperience[key].to}
-          showIcon={false}
-          placeholder="End Date"
-          format="YYYY-MM-DD"
-          customStyles={{
-            dateInput: {
-              marginLeft: 36
-            }
-          }}
-          onDateChange={eDate => {
-            this.updateWExpe("to", eDate, key);
-          }}
-        />
+        <View style={{ display: "flex", flexDirection: "row" }}>
+          <DatePicker
+            mode="date"
+            date={this.state.workExperience[key].from}
+            showIcon={false}
+            placeholder="Start Date"
+            format="YYYY-MM-DD"
+            customStyles={{
+              dateInput: {
+                marginLeft: 36
+              }
+            }}
+            onDateChange={date => {
+              this.updateWExpe("from", date, key);
+            }}
+          />
+          <DatePicker
+            mode="date"
+            date={this.state.workExperience[key].to}
+            showIcon={false}
+            placeholder="End Date"
+            format="YYYY-MM-DD"
+            customStyles={{
+              dateInput: {
+                marginLeft: 36
+              }
+            }}
+            onDateChange={date => {
+              this.updateWExpe("to", date, key);
+            }}
+          />
+        </View>
       </View>
     );
     this.setState({ workExperience: workExperience });
@@ -162,13 +201,21 @@ export default class ProfilePages extends Component {
     });
   }
 
+  updateExperience(exp) {
+    this.setState({ exp: exp });
+  }
+
+  updateSalary(salary) {
+    this.setState({ salary: salary });
+  }
+
+  updateRelocate(relocate) {
+    this.setState({ relocate: relocate });
+  }
+
   submitProfile() {
     console.log(this.state);
   }
-
-  goToProceed() {}
-
-  goToSkip() {}
 
   render() {
     const progressStepsStyle = {
@@ -236,9 +283,8 @@ export default class ProfilePages extends Component {
             scrollViewProps={this.defaultScrollViewProps}
             nextBtnTextStyle={buttonTextStyle}
             previousBtnTextStyle={buttonTextStyle}
-            onSubmit={this.submitProfile.bind(this)}
           >
-            <View style={{ alignItems: "center" }}>
+            <View>
               <Button
                 title="+ Add Work Experience"
                 onPress={() => this.addTextInput(this.textInput.length)}
@@ -246,6 +292,54 @@ export default class ProfilePages extends Component {
               {this.textInput.map((value, index) => {
                 return value;
               })}
+            </View>
+          </ProgressStep>
+
+          <ProgressStep
+            label="Third Step"
+            scrollViewProps={this.defaultScrollViewProps}
+            nextBtnTextStyle={buttonTextStyle}
+            previousBtnTextStyle={buttonTextStyle}
+          >
+            <View>
+              <Text style={styles.formText}>
+                How much combined experience do you have?
+              </Text>
+              <RadioButton
+                options={this.radioLabels}
+                update={this.updateExperience.bind(this)}
+              />
+              <Text style={styles.formText}>What is your expected Salary?</Text>
+              <RadioButton
+                options={this.salaryLabels}
+                update={this.updateSalary.bind(this)}
+              />
+            </View>
+          </ProgressStep>
+          <ProgressStep
+            label="Final Step"
+            scrollViewProps={this.defaultScrollViewProps}
+            nextBtnTextStyle={buttonTextStyle}
+            previousBtnTextStyle={buttonTextStyle}
+            onSubmit={this.submitProfile.bind(this)}
+          >
+            <View>
+              <Text style={styles.formText}>What is your current location</Text>
+              <TextInput
+                style={styles.inputBox}
+                onChangeText={location => this.setState({ location: location })}
+                underlineColorAndroid="rgba(0,0,0,0)"
+                placeholder="Position"
+                placeholderTextColor="#002f6c"
+                selectionColor="#fff"
+              />
+              <Text style={styles.formText}>
+                If given chance, are you willing to re-locate to another city?
+              </Text>
+              <RadioButton
+                options={this.relocate}
+                update={this.updateRelocate.bind(this)}
+              />
             </View>
           </ProgressStep>
         </ProgressSteps>
@@ -260,7 +354,6 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   formContainer: {
-    height: 50,
     width: 90 + "%"
   },
   inputBox: {
@@ -271,5 +364,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     width: 100 + "%",
     height: 50
+  },
+
+  formText: {
+    fontSize: 14,
+    fontWeight: "bold",
+    textAlign: "left"
   }
 });

@@ -95,7 +95,7 @@ export default class Moredetails extends Component {
         <Text style={styles.formText}>Select Gender</Text>
         <RadioButton
           options={this.radioLabels}
-          updateGender={this.updateGender.bind(this)}
+          update={this.updateGender.bind(this)}
         />
         <TouchableOpacity style={styles.submitButton}>
           <Text style={styles.buttonText} onPress={this.saveData}>

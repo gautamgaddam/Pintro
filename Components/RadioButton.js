@@ -6,11 +6,11 @@ export default class RadioButton extends Component {
     value: null
   };
 
-  changeGender = gender => {
+  change = value => {
     this.setState({
-      value: gender
+      value: value
     });
-    this.props.updateGender(gender);
+    this.props.update(value);
   };
 
   render() {
@@ -18,13 +18,13 @@ export default class RadioButton extends Component {
     const { value } = this.state;
 
     return (
-      <View style={styles.buttonContainer}>
+      <View>
         {options.map(item => {
           return (
             <View key={item.label} style={styles.buttonContainer}>
               <TouchableOpacity
                 style={styles.circle}
-                onPress={this.changeGender.bind(this, item.label)}
+                onPress={this.change.bind(this, item.label)}
               >
                 {value === item.label && <View style={styles.checkedCircle} />}
               </TouchableOpacity>
