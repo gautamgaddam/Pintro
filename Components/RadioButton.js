@@ -40,9 +40,9 @@ export default class RadioButton extends Component {
 const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 30
+    marginBottom: 20,
+    marginLeft: 20
   },
 
   circle: {
@@ -53,17 +53,17 @@ const styles = StyleSheet.create({
     borderColor: "#ACACAC",
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 20
+    marginHorizontal: 20
   },
 
   checkedCircle: {
-    width: 14,
-    height: 14,
-    borderRadius: 7,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
     backgroundColor: "#794F9B",
-    marginRight: 5
+    marginHorizontal: 5
   },
   label: {
-    marginRight: 20
+    alignItems: "center"
   }
 });

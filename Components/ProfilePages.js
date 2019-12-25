@@ -13,6 +13,7 @@ export default class ProfilePages extends Component {
     super(props);
     this.state = {
       industry: "Business services",
+      userId: global.user.id,
       category: "cat1",
       workExperience: []
     };
@@ -116,6 +117,7 @@ export default class ProfilePages extends Component {
   addTextInput = key => {
     let workExperience = this.state.workExperience;
     workExperience.push({
+      userId: global.user.id,
       companyName: "",
       position: "",
       from: "",
@@ -213,9 +215,28 @@ export default class ProfilePages extends Component {
     this.setState({ relocate: relocate });
   }
 
-  submitProfile() {
-    console.log(this.state);
-  }
+  submitProfile = async () => {
+    fetch(
+      "http://ec2-52-15-192-138.us-east-2.compute.amazonaws.com:6222/save-profile",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(this.state)
+      }
+    )
+      .then(response => response.json())
+      .then(responseJson => {
+        if (responseJson.status === 200) {
+          //Actions.seupProfile();
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
 
   render() {
     const progressStepsStyle = {
@@ -329,7 +350,7 @@ export default class ProfilePages extends Component {
                 style={styles.inputBox}
                 onChangeText={location => this.setState({ location: location })}
                 underlineColorAndroid="rgba(0,0,0,0)"
-                placeholder="Position"
+                placeholder="Location"
                 placeholderTextColor="#002f6c"
                 selectionColor="#fff"
               />

@@ -48,6 +48,8 @@ export default class Login extends Component {
             Actions.profilePhoto();
           } else if (global.user.gender === null || global.user.dob === null) {
             Actions.moreDetails();
+          } else if (global.user.has_profile) {
+            Actions.skills();
           } else {
             Actions.setupProfile();
           }
